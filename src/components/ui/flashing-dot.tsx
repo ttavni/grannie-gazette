@@ -6,15 +6,11 @@ interface FlashingDotProps {
   color?: string;
 }
 
-export function FlashingDot({
-  className,
-  size = "md",
-  color = "bg-green-500"
-}: FlashingDotProps) {
+export function FlashingDot({ className, size = "md", color = "bg-green-500" }: FlashingDotProps) {
   const sizeClasses = {
     sm: "w-2 h-2",
     md: "w-3 h-3",
-    lg: "w-4 h-4"
+    lg: "w-4 h-4",
   };
 
   return (
@@ -25,13 +21,7 @@ export function FlashingDot({
           color
         )}
       />
-      <span
-        className={cn(
-          "relative inline-flex rounded-full",
-          sizeClasses[size],
-          color
-        )}
-      />
+      <span className={cn("relative inline-flex rounded-full", sizeClasses[size], color)} />
     </span>
   );
 }

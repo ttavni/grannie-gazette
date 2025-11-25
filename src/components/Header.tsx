@@ -5,11 +5,11 @@ export default function Header() {
     weekday: "long",
     year: "numeric",
     month: "long",
-    day: "numeric"
+    day: "numeric",
   });
 
   return (
-    <header className="container mx-auto max-w-5xl px-4 sm:px-6 py-6 md:py-12">
+    <header className="container mx-auto max-w-5xl">
       {/* Top line with title */}
       <div className="flex items-center justify-center gap-2 md:gap-4">
         <hr className="flex-1 border-black border-t-2 md:border-t-4" />
@@ -22,11 +22,11 @@ export default function Header() {
       {/* Main title*/}
       <div className="flex flex-row justify-center items-center gap-1 py-4">
         <h1
-          className="md:text-9xl sm:text-8xl text-6xl leading-[0.9] font-serif font-bold tracking-normal"
+          className="md:text-8xl sm:text-7xl text-6xl leading-[0.9] font-serif font-bold tracking-normal"
           style={{
             fontFamily: "var(--font-pt-serif), serif",
             fontWeight: 700,
-            lineHeight: 0.85
+            lineHeight: 0.85,
           }}
         >
           GRANNIE

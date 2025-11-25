@@ -40,7 +40,16 @@
       "trailingCommas": "es5"
     }
   },
-  "organizeImports": {
-    "enabled": true
-  }
+  "overrides": [
+    {
+      "includes": ["*.ts", "*.tsx", "*.js", "*.jsx"],
+      "linter": {
+        "rules": {
+          "style": {
+            "useImportType": "off"
+          }
+        }
+      }
+    }
+  ]
 }

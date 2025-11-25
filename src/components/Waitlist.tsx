@@ -3,7 +3,7 @@
 import {
   ExpandableScreen,
   ExpandableScreenContent,
-  ExpandableScreenTrigger
+  ExpandableScreenTrigger,
 } from "@/components/ui/expandable-screen";
 import { ArrowRightIcon } from "lucide-react";
 import { Button } from "./ui/button";
@@ -11,11 +11,7 @@ import { FlashingDot } from "./ui/flashing-dot";
 
 export default function Waitlist() {
   return (
-    <ExpandableScreen
-      layoutId="cta-card"
-      triggerRadius="100px"
-      contentRadius="24px"
-    >
+    <ExpandableScreen layoutId="cta-card" triggerRadius="100px" contentRadius="24px">
       <ExpandableScreenTrigger>
         <Button className="group text-[0.65rem] font-bold uppercase tracking-wider sm:tracking-widest">
           <FlashingDot size="sm" />
