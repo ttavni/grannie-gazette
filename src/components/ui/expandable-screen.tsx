@@ -1,8 +1,8 @@
 "use client";
 
-import { createContext, useContext, useEffect, useState, type ReactNode } from "react";
 import { X } from "lucide-react";
 import { AnimatePresence, motion } from "motion/react";
+import { createContext, type ReactNode, useContext, useEffect, useState } from "react";
 
 // Context
 interface ExpandableScreenContextValue {

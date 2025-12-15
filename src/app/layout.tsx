@@ -1,4 +1,5 @@
 import Header from "@/components/Header";
+import { SmoothScrollProvider } from "@/components/SmoothScroll";
 import { WaitlistModal } from "@/components/Waitlist";
 import { WaitlistProvider } from "@/components/WaitlistContext";
 import type { Metadata } from "next";
@@ -31,13 +32,15 @@ export default function RootLayout({
   return (
     <html lang="en" className={`${ptSerif.variable} ${bebasNeue.variable} antialiased`}>
       <body>
-        <WaitlistProvider>
-          <div className="flex flex-col min-h-screen items-center justify-center">
-            <Header />
-            <main className="flex-1">{children}</main>
-          </div>
-          <WaitlistModal />
-        </WaitlistProvider>
+        <SmoothScrollProvider>
+          <WaitlistProvider>
+            <div className="flex flex-col min-h-screen items-center justify-center">
+              <Header />
+              <main className="flex-1">{children}</main>
+            </div>
+            <WaitlistModal />
+          </WaitlistProvider>
+        </SmoothScrollProvider>
       </body>
     </html>
   );
