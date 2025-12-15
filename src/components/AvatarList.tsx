@@ -6,27 +6,27 @@ import { useState } from "react";
 const data = [
   {
     name: "Jack",
-    position: "@Tencent",
+    position: "Son",
     image: "https://img.buoucoding.com/avatar/0004.png",
   },
   {
-    name: "Adam",
-    position: "@Tencent",
+    name: "Kate",
+    position: "Daughter",
     image: "https://img.buoucoding.com/avatar/0002.png",
   },
   {
-    name: "Kroul",
-    position: "@Tencent",
+    name: "Tim",
+    position: "Grandson",
     image: "https://img.buoucoding.com/avatar/0005.png",
   },
   {
-    name: "Alice",
-    position: "@Huawei",
+    name: "Mia",
+    position: "Granddaughter",
     image: "https://img.buoucoding.com/avatar/0001.png",
   },
   {
-    name: "Korel",
-    position: "@Alibaba",
+    name: "Alex",
+    position: "Son-in-law",
     image: "https://img.buoucoding.com/avatar/0006.png",
   },
 ];

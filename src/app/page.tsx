@@ -1,10 +1,766 @@
-import BentoGrid from "@/components/BentoGrid";
+"use client";
+
+import { cn } from "@/lib/utils";
+import type { Variants } from "motion/react";
+import { motion } from "motion/react";
+import { FamilyContributionMarquee } from "@/components/AnimatedCursor";
+import { AvatarListDemo } from "@/components/AvatarList";
+import { Heading, Paragraph, PricingWrapper } from "@/components/PricingCard";
+import { Globe } from "@/components/Globe";
+import { useWaitlist } from "@/components/WaitlistContext";
+
+const fadeInUp: Variants = {
+  hidden: { opacity: 0, y: 30 },
+  visible: {
+    opacity: 1,
+    y: 0,
+    transition: { duration: 0.6, ease: "easeOut" as const },
+  },
+};
+
+const staggerContainer: Variants = {
+  hidden: { opacity: 0 },
+  visible: {
+    opacity: 1,
+    transition: { staggerChildren: 0.15 },
+  },
+};
+
+// Newspaper-style decorative divider
+function NewspaperDivider({ className }: { className?: string }) {
+  return (
+    <div className={cn("flex items-center gap-3 py-6", className)}>
+      <div className="flex-1 h-px bg-neutral-300" />
+      <div className="text-neutral-400 text-xs tracking-[0.3em] uppercase font-medium">
+        ✦
+      </div>
+      <div className="flex-1 h-px bg-neutral-300" />
+    </div>
+  );
+}
+
+// Hero section
+function HeroSection() {
+  return (
+    <motion.section
+      variants={staggerContainer}
+      initial="hidden"
+      animate="visible"
+      className="py-8 md:py-12"
+    >
+      <motion.div variants={fadeInUp} className="text-center max-w-3xl mx-auto">
+        <span className="inline-flex items-center gap-2 px-4 py-1.5 text-xs tracking-[0.2em] uppercase bg-amber-500 text-white font-medium mb-6 rounded-full">
+          <span className="w-2 h-2 bg-white rounded-full animate-pulse" />
+          Coming Soon
+        </span>
+        <h2
+          className="text-4xl md:text-5xl lg:text-6xl font-serif font-bold leading-tight mb-6"
+          style={{ fontFamily: "var(--font-pt-serif), serif" }}
+        >
+          Turn scattered family updates into a newspaper grandma actually reads
+        </h2>
+        <p className="text-lg md:text-xl text-neutral-600 leading-relaxed max-w-2xl mx-auto">
+          Your photos and stories, printed and delivered. No screens, no
+          passwords, no confusion—just a real paper she can hold, read over
+          breakfast, and show the neighbors.
+        </p>
+      </motion.div>
+
+      <motion.div variants={fadeInUp} className="mt-12 flex justify-center">
+        <div className="relative">
+          <div className="absolute -inset-4 bg-gradient-to-r from-amber-100 via-orange-50 to-amber-100 rounded-lg blur-xl opacity-60" />
+          <div className="relative bg-white border-2 border-neutral-900 p-6 md:p-8 shadow-[8px_8px_0_0_rgba(0,0,0,1)] max-w-md">
+            <div className="text-center">
+              <div className="text-xs tracking-[0.2em] uppercase text-amber-600 mb-2 font-bold">
+                Preview
+              </div>
+              <div className="border-t-2 border-b-2 border-neutral-900 py-3 my-3">
+                <h3
+                  className="text-2xl md:text-3xl font-bold"
+                  style={{ fontFamily: "var(--font-bebas-neue)" }}
+                >
+                  EXTRA! EXTRA!
+                </h3>
+              </div>
+              <p className="font-serif text-sm italic text-neutral-700">
+                "Tommy scored his first goal!" <br />
+                "Emma made the honor roll!" <br />
+                "Baby Lily took her first steps!"
+              </p>
+              <div className="mt-4 pt-4 border-t border-neutral-200">
+                <p className="text-xs text-neutral-500">
+                  Every milestone. Every memory. In her hands.
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </motion.div>
+    </motion.section>
+  );
+}
+
+// How it works
+function HowItWorksSection() {
+  const steps = [
+    {
+      number: "01",
+      title: "Everyone Shares",
+      description:
+        "The whole family contributes through a dead-simple app. Photos, updates, little notes—all in one place.",
+      icon: "📱",
+    },
+    {
+      number: "02",
+      title: "We Design It",
+      description:
+        "We turn your family's chaos into a beautiful, readable newspaper. Large print. Clear layout. No squinting required.",
+      icon: "📰",
+    },
+    {
+      number: "03",
+      title: "She Gets It",
+      description:
+        "A real, printed newspaper arrives. No charging, no updates, no 'click here'—just news from the people who matter most.",
+      icon: "📬",
+    },
+  ];
+
+  return (
+    <motion.section
+      variants={staggerContainer}
+      initial="hidden"
+      whileInView="visible"
+      viewport={{ once: true, margin: "-100px" }}
+      className="py-8"
+    >
+      <motion.div variants={fadeInUp} className="text-center mb-10">
+        <span className="inline-block px-3 py-1 text-[0.65rem] tracking-[0.15em] uppercase bg-neutral-100 text-neutral-500 font-medium mb-3 rounded-full">
+          How It Works
+        </span>
+        <h2
+          className="text-3xl md:text-4xl font-bold tracking-wide"
+          style={{ fontFamily: "var(--font-bebas-neue)" }}
+        >
+          Simple for You. Perfect for Her.
+        </h2>
+        <div className="w-24 h-1 bg-neutral-900 mx-auto mt-3" />
+      </motion.div>
+
+      <div className="grid md:grid-cols-3 gap-6 md:gap-0 md:divide-x-2 divide-neutral-200">
+        {steps.map((step, index) => (
+          <motion.div
+            key={step.number}
+            variants={fadeInUp}
+            className={cn(
+              "text-center px-6 py-4",
+              index === 1 && "md:border-x-0"
+            )}
+          >
+            <div className="text-5xl mb-4">{step.icon}</div>
+            <div className="text-xs tracking-[0.2em] text-neutral-400 mb-2">
+              STEP {step.number}
+            </div>
+            <h3
+              className="text-xl font-bold mb-3"
+              style={{ fontFamily: "var(--font-bebas-neue)" }}
+            >
+              {step.title}
+            </h3>
+            <p className="text-neutral-600 text-sm leading-relaxed">
+              {step.description}
+            </p>
+          </motion.div>
+        ))}
+      </div>
+    </motion.section>
+  );
+}
+
+// Globe section for global connection
+function GlobalConnectionSection() {
+  return (
+    <motion.section
+      variants={staggerContainer}
+      initial="hidden"
+      whileInView="visible"
+      viewport={{ once: true, margin: "-100px" }}
+      className="py-8"
+    >
+      <div className="grid md:grid-cols-2 gap-8 items-center">
+        <motion.div variants={fadeInUp} className="order-2 md:order-1">
+          <div className="relative h-[350px] md:h-[400px] bg-gradient-to-br from-amber-50 to-orange-50 rounded-2xl overflow-hidden border border-neutral-200">
+            <Globe className="opacity-90" />
+          </div>
+        </motion.div>
+
+        <motion.div variants={fadeInUp} className="order-1 md:order-2">
+          <span className="text-xs tracking-[0.2em] uppercase text-amber-600 font-medium">
+            🌍 No Distance Too Far
+          </span>
+          <h2
+            className="text-3xl md:text-4xl font-bold mt-2 mb-4"
+            style={{ fontFamily: "var(--font-bebas-neue)" }}
+          >
+            Family Scattered? Paper Connects.
+          </h2>
+          <p className="text-neutral-600 leading-relaxed mb-6">
+            Your daughter in Sydney. Your brother in London. Grandma in her
+            kitchen in Ohio. Distance means nothing when love arrives folded on
+            the doorstep every month.
+          </p>
+          <div className="space-y-3">
+            <div className="flex items-center gap-3">
+              <div className="w-2 h-2 bg-amber-500 rounded-full" />
+              <span className="text-sm text-neutral-600">
+                Contributors from anywhere in the world
+              </span>
+            </div>
+            <div className="flex items-center gap-3">
+              <div className="w-2 h-2 bg-amber-500 rounded-full" />
+              <span className="text-sm text-neutral-600">
+                Delivered to any address
+              </span>
+            </div>
+            <div className="flex items-center gap-3">
+              <div className="w-2 h-2 bg-amber-500 rounded-full" />
+              <span className="text-sm text-neutral-600">
+                Timezone? What timezone?
+              </span>
+            </div>
+          </div>
+        </motion.div>
+      </div>
+    </motion.section>
+  );
+}
+
+// Stories preview
+function StoriesPreviewSection() {
+  return (
+    <motion.section
+      variants={staggerContainer}
+      initial="hidden"
+      whileInView="visible"
+      viewport={{ once: true, margin: "-100px" }}
+      className="py-8"
+    >
+      <div className="grid md:grid-cols-2 gap-8 items-center">
+        <motion.div variants={fadeInUp}>
+          <span className="text-xs tracking-[0.2em] uppercase text-amber-600 font-medium">
+            ✨ Real-Time Updates
+          </span>
+          <h2
+            className="text-3xl md:text-4xl font-bold mt-2 mb-4"
+            style={{ fontFamily: "var(--font-bebas-neue)" }}
+          >
+            Stories Flow In. Magic Flows Out.
+          </h2>
+          <p className="text-neutral-600 leading-relaxed mb-6">
+            Share a photo at breakfast. Add a caption at lunch. By month's end,
+            it's all woven into a gazette worth keeping forever.
+          </p>
+          <div className="space-y-3">
+            <div className="flex items-center gap-3">
+              <div className="w-2 h-2 bg-amber-500 rounded-full" />
+              <span className="text-sm text-neutral-600">
+                No tech skills needed for recipients
+              </span>
+            </div>
+            <div className="flex items-center gap-3">
+              <div className="w-2 h-2 bg-amber-500 rounded-full" />
+              <span className="text-sm text-neutral-600">
+                Large, easy-to-read print
+              </span>
+            </div>
+            <div className="flex items-center gap-3">
+              <div className="w-2 h-2 bg-amber-500 rounded-full" />
+              <span className="text-sm text-neutral-600">
+                Designed for aging eyes and minds
+              </span>
+            </div>
+          </div>
+        </motion.div>
+
+        <motion.div variants={fadeInUp}>
+          <div className="bg-white border border-neutral-200 rounded-xl p-4 shadow-lg">
+            <div className="text-xs tracking-[0.15em] uppercase text-amber-600 mb-3 text-center font-medium">
+              ✨ Concept preview
+            </div>
+            <FamilyContributionMarquee />
+          </div>
+        </motion.div>
+      </div>
+    </motion.section>
+  );
+}
+
+// Why section
+function WhySection() {
+  return (
+    <motion.section
+      variants={staggerContainer}
+      initial="hidden"
+      whileInView="visible"
+      viewport={{ once: true, margin: "-100px" }}
+      className="py-8"
+    >
+      <motion.div
+        variants={fadeInUp}
+        className="bg-neutral-900 text-white p-8 md:p-12 relative overflow-hidden"
+      >
+        <div className="absolute inset-0 opacity-5">
+          <div
+            className="absolute inset-0"
+            style={{
+              backgroundImage: `repeating-linear-gradient(
+                0deg,
+                transparent,
+                transparent 2px,
+                rgba(255,255,255,0.1) 2px,
+                rgba(255,255,255,0.1) 4px
+              )`,
+            }}
+          />
+        </div>
+
+        <div className="relative z-10 max-w-3xl mx-auto text-center">
+          <h2
+            className="text-3xl md:text-4xl font-bold mb-6"
+            style={{ fontFamily: "var(--font-bebas-neue)" }}
+          >
+            Why Paper? Because It Works.
+          </h2>
+
+          <div className="grid md:grid-cols-2 gap-8 text-left mt-8">
+            <div>
+              <h3 className="font-bold text-lg mb-2 text-amber-300">
+                Familiar & Comforting
+              </h3>
+              <p className="text-neutral-300 text-sm leading-relaxed">
+                She's been reading the paper for 60 years. No learning curve. No
+                frustration. Just news—the good kind.
+              </p>
+            </div>
+            <div>
+              <h3 className="font-bold text-lg mb-2 text-amber-300">
+                Lives on the Coffee Table
+              </h3>
+              <p className="text-neutral-300 text-sm leading-relaxed">
+                Not buried in a phone. Visible. Tangible. "Come look what Tommy
+                did!" becomes an everyday event.
+              </p>
+            </div>
+            <div>
+              <h3 className="font-bold text-lg mb-2 text-amber-300">
+                Perfect for Dementia
+              </h3>
+              <p className="text-neutral-300 text-sm leading-relaxed">
+                No passwords. No swipes. No confusion. Just familiar faces in a
+                familiar format—every time she picks it up feels new.
+              </p>
+            </div>
+            <div>
+              <h3 className="font-bold text-lg mb-2 text-amber-300">
+                Zero Friction for Family
+              </h3>
+              <p className="text-neutral-300 text-sm leading-relaxed">
+                Share when you want. We do the rest. No coordination, no
+                deadlines, no guilt—just contribute when life happens.
+              </p>
+            </div>
+          </div>
+        </div>
+      </motion.div>
+    </motion.section>
+  );
+}
+
+// Family section
+function FamilySection() {
+  return (
+    <motion.section
+      variants={staggerContainer}
+      initial="hidden"
+      whileInView="visible"
+      viewport={{ once: true, margin: "-100px" }}
+      className="py-8"
+    >
+      <div className="text-center">
+        <motion.div variants={fadeInUp}>
+          <h2
+            className="text-3xl md:text-4xl font-bold"
+            style={{ fontFamily: "var(--font-bebas-neue)" }}
+          >
+            The Whole Crew. One Gazette.
+          </h2>
+          <p className="text-neutral-600 mt-3 max-w-xl mx-auto">
+            Kids, cousins, that uncle who never calls—everyone can drop in a
+            photo or story. One subscription covers unlimited family.
+          </p>
+        </motion.div>
+
+        <motion.div variants={fadeInUp} className="flex justify-center mt-6">
+          <AvatarListDemo />
+        </motion.div>
+
+        <motion.div
+          variants={fadeInUp}
+          className="grid grid-cols-3 gap-4 max-w-md mx-auto mt-8 text-center"
+        >
+          <div>
+            <div
+              className="text-3xl md:text-4xl font-bold"
+              style={{ fontFamily: "var(--font-bebas-neue)" }}
+            >
+              ∞
+            </div>
+            <div className="text-xs text-neutral-500 uppercase tracking-wider mt-1">
+              Contributors
+            </div>
+          </div>
+          <div>
+            <div
+              className="text-3xl md:text-4xl font-bold"
+              style={{ fontFamily: "var(--font-bebas-neue)" }}
+            >
+              12
+            </div>
+            <div className="text-xs text-neutral-500 uppercase tracking-wider mt-1">
+              Issues / Year
+            </div>
+          </div>
+          <div>
+            <div
+              className="text-3xl md:text-4xl font-bold"
+              style={{ fontFamily: "var(--font-bebas-neue)" }}
+            >
+              1
+            </div>
+            <div className="text-xs text-neutral-500 uppercase tracking-wider mt-1">
+              Happy Grandparent
+            </div>
+          </div>
+        </motion.div>
+      </div>
+    </motion.section>
+  );
+}
+
+// Testimonial/scenarios section
+function TestimonialSection() {
+  const scenarios = [
+    {
+      quote:
+        "Imagine her lighting up when the Gazette arrives. Reading every page twice. Calling you to say she showed it to her friend at bingo.",
+      person: "The daughter who lives three states away",
+      icon: "💝",
+    },
+    {
+      quote:
+        "Picture him at breakfast, newspaper in hand—just like always. Except now it's his grandkids' faces, not strangers.",
+      person: "The son caring for dad with memory loss",
+      icon: "🏡",
+    },
+  ];
+
+  return (
+    <motion.section
+      variants={staggerContainer}
+      initial="hidden"
+      whileInView="visible"
+      viewport={{ once: true, margin: "-100px" }}
+      className="py-8"
+    >
+      <motion.div variants={fadeInUp} className="text-center mb-8">
+        <span className="inline-block px-3 py-1 text-[0.65rem] tracking-[0.15em] uppercase bg-amber-100 text-amber-700 font-medium mb-3 rounded-full">
+          Why We're Building This
+        </span>
+        <h2
+          className="text-3xl md:text-4xl font-bold"
+          style={{ fontFamily: "var(--font-bebas-neue)" }}
+        >
+          It's Personal
+        </h2>
+        <div className="w-24 h-1 bg-neutral-900 mx-auto mt-3" />
+      </motion.div>
+
+      <div className="grid md:grid-cols-2 gap-6">
+        {scenarios.map((scenario) => (
+          <motion.blockquote
+            key={scenario.person}
+            variants={fadeInUp}
+            className="bg-gradient-to-br from-amber-50 to-white border border-neutral-200 p-6 md:p-8 relative"
+          >
+            <div className="absolute -top-4 left-6 text-4xl">
+              {scenario.icon}
+            </div>
+            <p className="text-neutral-700 italic leading-relaxed pt-4 font-serif">
+              "{scenario.quote}"
+            </p>
+            <footer className="mt-4 pt-4 border-t border-neutral-200">
+              <span className="text-amber-600 text-sm font-bold">
+                {scenario.person}
+              </span>
+            </footer>
+          </motion.blockquote>
+        ))}
+      </div>
+    </motion.section>
+  );
+}
+
+// Newspaper preview
+function NewspaperPreview() {
+  return (
+    <motion.section
+      variants={staggerContainer}
+      initial="hidden"
+      whileInView="visible"
+      viewport={{ once: true, margin: "-100px" }}
+      className="py-8"
+    >
+      <motion.div variants={fadeInUp} className="text-center mb-8">
+        <span className="inline-block px-3 py-1 text-[0.65rem] tracking-[0.15em] uppercase bg-neutral-100 text-neutral-500 font-medium mb-3 rounded-full">
+          Sample
+        </span>
+        <h2
+          className="text-3xl md:text-4xl font-bold"
+          style={{ fontFamily: "var(--font-bebas-neue)" }}
+        >
+          What She'll Actually Hold
+        </h2>
+        <p className="text-neutral-600 mt-2">
+          Real paper. Real stories. Designed for real people.
+        </p>
+      </motion.div>
+
+      <motion.div
+        variants={fadeInUp}
+        className="max-w-2xl mx-auto bg-[#f9f6f0] border-2 border-neutral-300 shadow-xl p-6 md:p-8 relative"
+      >
+        <div className="absolute -top-3 -right-3 bg-amber-500 text-white text-xs font-bold px-3 py-1 rounded-full shadow-lg">
+          Sample
+        </div>
+
+        <div className="text-center border-b-4 border-double border-neutral-400 pb-4 mb-4">
+          <div className="text-xs tracking-[0.3em] text-neutral-500 mb-1">
+            THE JOHNSON FAMILY
+          </div>
+          <h3
+            className="text-4xl md:text-5xl"
+            style={{ fontFamily: "var(--font-bebas-neue)" }}
+          >
+            FAMILY GAZETTE
+          </h3>
+          <div className="text-xs tracking-wider text-neutral-500 mt-1">
+            December 2024 · Issue No. 7
+          </div>
+        </div>
+
+        <div className="grid md:grid-cols-2 gap-4 text-sm">
+          <div className="md:col-span-2">
+            <h4 className="font-bold text-xl mb-2 border-b border-neutral-300 pb-1">
+              Emma Graduates Top of Her Class!
+            </h4>
+            <div className="flex gap-4">
+              <div className="w-24 h-24 bg-neutral-200 flex-shrink-0 flex items-center justify-center text-3xl">
+                🎓
+              </div>
+              <p className="text-neutral-600 text-xs leading-relaxed">
+                Our brilliant granddaughter Emma received her diploma with
+                honors last Saturday. The whole family gathered to celebrate.
+                She's off to university in September to study medicine—following
+                in Grandad's footsteps!
+              </p>
+            </div>
+          </div>
+
+          <div>
+            <h4 className="font-bold mb-2 border-b border-neutral-300 pb-1">
+              Tommy's Winning Goal
+            </h4>
+            <p className="text-neutral-600 text-xs leading-relaxed">
+              Tommy scored the winning goal in Saturday's match! Coach says he's
+              got real talent. We're all so proud.
+            </p>
+          </div>
+
+          <div>
+            <h4 className="font-bold mb-2 border-b border-neutral-300 pb-1">
+              Mum's Apple Pie Lives On
+            </h4>
+            <p className="text-neutral-600 text-xs leading-relaxed">
+              Lisa made your famous apple pie for Sunday dinner. Everyone agreed
+              it was almost as good as yours! 🥧
+            </p>
+          </div>
+        </div>
+
+        <div className="mt-4 pt-4 border-t border-neutral-300 text-center">
+          <p className="text-xs text-neutral-500 italic">
+            Made with love by your family · Grannie Gazette
+          </p>
+        </div>
+      </motion.div>
+    </motion.section>
+  );
+}
+
+// Roadmap section
+function RoadmapSection() {
+  const { openWaitlist } = useWaitlist();
+
+  return (
+    <motion.section
+      variants={staggerContainer}
+      initial="hidden"
+      whileInView="visible"
+      viewport={{ once: true, margin: "-100px" }}
+      className="py-8"
+    >
+      <motion.div variants={fadeInUp} className="text-center mb-8">
+        <span className="inline-flex items-center gap-2 px-3 py-1 text-[0.65rem] tracking-[0.15em] uppercase bg-amber-500 text-white font-medium mb-3 rounded-full">
+          <span className="w-1.5 h-1.5 bg-white rounded-full animate-pulse" />
+          Building in the Open
+        </span>
+        <h2
+          className="text-3xl md:text-4xl font-bold"
+          style={{ fontFamily: "var(--font-bebas-neue)" }}
+        >
+          The Roadmap
+        </h2>
+        <p className="text-neutral-600 mt-2 max-w-lg mx-auto">
+          We're building this step by step. Join the waitlist to follow along.
+        </p>
+      </motion.div>
+
+      <motion.div
+        variants={fadeInUp}
+        className="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-3xl mx-auto items-stretch"
+      >
+        <PricingWrapper
+          type="waves"
+          colorClass="bg-amber-500"
+          buttonText="Join Waitlist"
+          onClick={openWaitlist}
+          className="h-full min-h-[420px]"
+        >
+          <Heading>Coming First</Heading>
+          <div className="text-4xl sm:text-5xl font-bold leading-none">
+            Digital
+            <br />
+            PDFs
+          </div>
+          <Paragraph>
+            Beautiful, print-ready PDFs you can download and print at home, at
+            the library, or at any print shop. Same love, DIY delivery.
+          </Paragraph>
+        </PricingWrapper>
+
+        <PricingWrapper
+          type="crosses"
+          colorClass="bg-neutral-800"
+          buttonText="Get Early Access"
+          onClick={openWaitlist}
+          className="h-full min-h-[420px]"
+        >
+          <Heading>The Dream</Heading>
+          <div className="text-4xl sm:text-5xl font-bold leading-none">
+            Printed &
+            <br />
+            Delivered
+          </div>
+          <Paragraph>
+            Professional printing. Monthly delivery. Right to her mailbox.
+            You'll never have to think about it—just share and we handle the
+            rest.
+          </Paragraph>
+        </PricingWrapper>
+      </motion.div>
+    </motion.section>
+  );
+}
+
+// CTA section
+function CTASection() {
+  const { openWaitlist } = useWaitlist();
+
+  return (
+    <motion.section
+      variants={staggerContainer}
+      initial="hidden"
+      whileInView="visible"
+      viewport={{ once: true, margin: "-100px" }}
+      className="py-12"
+      id="waitlist"
+    >
+      <motion.div
+        variants={fadeInUp}
+        className="text-center bg-gradient-to-b from-amber-50 to-orange-50 border-2 border-neutral-200 p-8 md:p-12"
+      >
+        <span className="inline-flex items-center gap-2 px-4 py-1.5 text-xs tracking-[0.2em] uppercase bg-amber-500 text-white font-medium mb-4 rounded-full">
+          <span className="w-2 h-2 bg-white rounded-full animate-pulse" />
+          Waitlist Open
+        </span>
+        <h2
+          className="text-3xl md:text-4xl lg:text-5xl font-bold mb-4"
+          style={{ fontFamily: "var(--font-bebas-neue)" }}
+        >
+          Be Part of This
+        </h2>
+        <p className="text-neutral-600 max-w-xl mx-auto mb-8">
+          We're not far from launch. Get on the list for early access, sneak
+          peeks, and the best pricing when we go live.
+        </p>
+
+        <button
+          type="button"
+          onClick={openWaitlist}
+          className="px-10 py-4 bg-neutral-900 text-white font-bold uppercase tracking-wider text-sm hover:bg-neutral-800 transition-colors shadow-[4px_4px_0_0_rgba(0,0,0,0.2)]"
+        >
+          Join the Waitlist →
+        </button>
+
+        <p className="text-xs text-neutral-500 mt-4">
+          No spam. Just the good stuff.
+        </p>
+      </motion.div>
+    </motion.section>
+  );
+}
 
 export default function Home() {
   return (
-    <div className="container mx-auto max-w-5xl">
+    <div className="container mx-auto max-w-4xl px-4">
       <main>
-        <BentoGrid />
+        <div className="relative">
+          <HeroSection />
+          <NewspaperDivider />
+          <HowItWorksSection />
+          <NewspaperDivider />
+          <GlobalConnectionSection />
+          <NewspaperDivider />
+          <StoriesPreviewSection />
+          <NewspaperDivider />
+          <WhySection />
+          <NewspaperDivider />
+          <FamilySection />
+          <NewspaperDivider />
+          <TestimonialSection />
+          <NewspaperDivider />
+          <NewspaperPreview />
+          <NewspaperDivider />
+          <RoadmapSection />
+          <NewspaperDivider />
+          <CTASection />
+
+          <footer className="text-center py-8 border-t-2 border-neutral-200 mt-8">
+            <p className="text-xs text-neutral-500 tracking-wider">
+              © 2024 Grannie Gazette · Made with ♥ for families everywhere
+            </p>
+          </footer>
+        </div>
       </main>
     </div>
   );

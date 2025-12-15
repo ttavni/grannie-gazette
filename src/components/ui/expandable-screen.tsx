@@ -49,6 +49,11 @@ export function ExpandableScreen({
 }: ExpandableScreenProps) {
   const [isExpanded, setIsExpanded] = useState(defaultExpanded);
 
+  // Sync with external state changes
+  useEffect(() => {
+    setIsExpanded(defaultExpanded);
+  }, [defaultExpanded]);
+
   const expand = () => {
     setIsExpanded(true);
     onExpandChange?.(true);

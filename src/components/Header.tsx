@@ -22,7 +22,7 @@ export default function Header() {
       {/* Main title*/}
       <div className="flex flex-row justify-center items-center gap-1 py-4">
         <h1
-          className="md:text-8xl sm:text-7xl text-6xl leading-[0.9] font-serif font-bold tracking-normal"
+          className="md:text-9xl sm:text-8xl text-7xl leading-[0.9] font-serif font-bold tracking-widest"
           style={{
             fontFamily: "var(--font-pt-serif), serif",
             fontWeight: 700,
